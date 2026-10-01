@@ -1,2 +1,16 @@
-build
-!.vscode/*
+build/
+.vscode/
+
+# Pico SDK and tool-generated files
+*.elf
+*.bin
+*.hex
+*.uf2
+*.map
+*.dis
+*.elf.map
+
+# Local configuration and secrets
+*.local
+*.secrets
+secrets/

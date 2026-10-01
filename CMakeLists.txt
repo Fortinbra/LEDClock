@@ -35,7 +35,16 @@ pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(LEDClock main.cpp )
+add_executable(LEDClock
+    src/main.cpp
+    src/portal.cpp
+)
+
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    set_source_files_properties(src/main.cpp src/portal.cpp PROPERTIES
+        COMPILE_OPTIONS "-Wall;-Wextra;-Wpedantic;-Werror"
+    )
+endif()
 
 pico_set_program_name(LEDClock "LEDClock")
 pico_set_program_version(LEDClock "0.1")
@@ -48,14 +57,16 @@ pico_enable_stdio_usb(LEDClock 1)
 target_link_libraries(LEDClock
         pico_stdlib)
 
+target_link_libraries(LEDClock
+    pico_cyw43_arch_lwip_poll)
+
 # Add the standard include files to the build
 target_include_directories(LEDClock PRIVATE
-        ${CMAKE_CURRENT_LIST_DIR}
+    ${CMAKE_CURRENT_LIST_DIR}/include
 )
 
 # Add any user requested libraries
 target_link_libraries(LEDClock 
-        
         )
 
 pico_add_extra_outputs(LEDClock)
