@@ -23,7 +23,7 @@ if (EXISTS ${picoVscode})
     include(${picoVscode})
 endif()
 # ====================================================================================
-set(PICO_BOARD pico2_w CACHE STRING "Board type")
+set(PICO_BOARD pimoroni_plasma2350_w CACHE STRING "Board type")
 
 # Pull in Raspberry Pi Pico SDK (must be before project)
 include(pico_sdk_import.cmake)
@@ -38,10 +38,19 @@ pico_sdk_init()
 add_executable(LEDClock
     src/main.cpp
     src/portal.cpp
+    src/settings.cpp
+    src/timekeeping.cpp
+    src/display.cpp
+    src/diagnostic.cpp
+    src/face.cpp
+    src/text.cpp
+    src/animations.cpp
 )
 
+pico_generate_pio_header(LEDClock ${CMAKE_CURRENT_LIST_DIR}/src/ws2812.pio)
+
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-    set_source_files_properties(src/main.cpp src/portal.cpp PROPERTIES
+    set_source_files_properties(src/main.cpp src/portal.cpp src/settings.cpp src/timekeeping.cpp src/display.cpp src/diagnostic.cpp src/face.cpp src/text.cpp src/animations.cpp PROPERTIES
         COMPILE_OPTIONS "-Wall;-Wextra;-Wpedantic;-Werror"
     )
 endif()
@@ -51,14 +60,18 @@ pico_set_program_version(LEDClock "0.1")
 
 # Modify the below lines to enable/disable output over UART/USB
 pico_enable_stdio_uart(LEDClock 1)
-pico_enable_stdio_usb(LEDClock 1)
+pico_enable_stdio_usb(LEDClock 0)
 
 # Add the standard library to the build
 target_link_libraries(LEDClock
         pico_stdlib)
 
 target_link_libraries(LEDClock
-    pico_cyw43_arch_lwip_poll)
+    pico_cyw43_arch_lwip_poll
+    pico_flash
+    hardware_flash
+    hardware_pio
+    hardware_dma)
 
 # Add the standard include files to the build
 target_include_directories(LEDClock PRIVATE

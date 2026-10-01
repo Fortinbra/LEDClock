@@ -39,6 +39,22 @@ index = base + (width - 1 - x)      when row is odd
 
 This candidate mapping is documentation only until the physical strip route is verified. The expected index for each corner must be recorded in the hardware test notes.
 
+### Verified mapping (first panel)
+
+The diagnostic pattern confirmed a **column-major serpentine** route: strand index 0 is the top-left pixel, the strand runs down column 0, up column 1, and so on, ending at the top-right pixel. Colour order is GRB.
+
+```text
+index = x * height + y                    when x is even
+index = x * height + (height - 1 - y)     when x is odd
+```
+
+| Corner | Logical (x, y) | Strand index |
+|---|---|---|
+| Top-left | (0, 0) | 0 |
+| Bottom-left | (0, 7) | 7 |
+| Bottom-right | (31, 7) | 248 |
+| Top-right | (31, 0) | 255 |
+
 ## Data and Refresh
 
 A full RGB frame for the initial array requires:

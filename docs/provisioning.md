@@ -4,7 +4,7 @@
 
 On first startup, or whenever no usable Wi-Fi configuration is stored, LEDClock provides a temporary setup network. A client can connect to that network, complete the setup form, and then use the same web interface from the normal local network for future settings updates.
 
-The current firmware slice starts the `LEDClock-Setup` access point and serves the responsive setup page with system, light, and dark appearance options. The scan endpoint and settings submission endpoint are present as UI integration points, but they deliberately report not implemented until radio scanning, credential storage, and station connection are added.
+The current firmware slice starts the `LEDClock-Setup` access point with its own DHCP and captive DNS, serves the setup page, performs real radio scans, validates and test-joins submitted settings, and saves them to flash only after the join succeeds. Settings live in the last two 4 KB flash sectors as alternating CRC-checked, sequence-numbered records so an interrupted write keeps the previous good copy. On boot, saved settings are used to join the network (3 attempts, 20 s each, 10 s apart) before falling back to setup mode. The same page is served on the local network; a blank password there keeps the saved one.
 
 Weather is not part of the current product. The ZIP code is collected and stored now so a future weather feature can use it without changing the initial setup flow.
 
